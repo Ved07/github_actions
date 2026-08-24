@@ -1,0 +1,47 @@
+name: System Report
+
+on:
+    # push:
+    workflow_dispatch
+
+jobs:
+    system-info:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Report system information
+                run: |
+                    echo "OS name: $(. /etc/os-release && echo "$PRETTY_NAME")"
+                    echo "Kernel version: $(uname -r)"
+                    echo "Free disk space: $(df -h / | awk 'NR==2 {print $4}')"
+                    echo "Date and time: $(date)"
+                    sudo apt-get update
+                    sudo apt-get install -y tree
+                    tree -L 2 "$HOME"
+
+    jobs:
+        system-info:
+            runs-on: ubuntu-latest
+            steps:
+                - name: Report system information
+                  run: |
+                        echo "OS name: ${{github.runner.os}}"
+                        echo "Kernel version: ${{github.runner.kernal}}"
+                        echo "Free disk space: ${{github.runner.free_disk_space}}"
+                        echo "Date and time: ${{github.runner.date_time}}"
+                        sudo apt-get update
+                        sudo apt-get install -y tree
+                        tree -L 2 "$HOME"
+
+        tool-check:
+            runs-on: ubuntu-latest
+            steps:
+                - name: Check required tools
+                  run: |
+                        sudo apt-get update
+                        sudo apt-get install -y jq
+                        printf '{"project":"system-report","status":"ready","runner":"ubuntu-latest"}\n' > report.json
+                        echo "Project value: ${{github.runner.project}}"
+                        echo "python3 version: ${{github.runner.python3_version}}"
+                        echo "git version: ${{github.runner.git_version}}"
+                        echo "jq version: ${{github.runner.jq_version}}"
+                        echo "Report complete"
