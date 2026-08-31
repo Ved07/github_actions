@@ -1,0 +1,43 @@
+name: The smart dispatcher
+
+run-name: >
+  
+
+on:
+  workflow_dispatch:
+    inputs:
+        risk-level:
+            description: "Risk level"
+            type: choice
+            default: low
+            options:
+              - low
+              - medium
+              - high
+              - critical
+        notify:
+            description: "Notify team"
+            type: boolean
+            default: true
+        dry-run:
+            description: "Dry-Run"
+            type: boolean
+            default: false
+        owner:
+            description: "Enter Owner details"
+            type: string
+            required: false
+            
+        Components:
+            description: "Comma separated components"
+            type: string
+            required: false
+
+
+jobs:
+    echo :
+        runs-on: ubuntu-latest
+        steps:
+            - name: Echo inputs
+              run: echo "Hello"
+
